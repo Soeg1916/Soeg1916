@@ -301,12 +301,25 @@
         }
 
         @media (max-width: 768px) {
-            header h1 { font-size: 4rem; }
-            nav ul { flex-direction: column; gap: 2.5rem; }
-            .timeline { padding-left: 4rem; }
-            .timeline::before { left: 2rem; }
-            .timeline-item::before { left: -2.5rem; }
+            header h1 { font-size: 3rem; letter-spacing: 6px; }
+            header p { font-size: 1.5rem; }
+            nav ul { flex-direction: column; gap: 1rem; }
+            nav a { font-size: 1.2rem; }
+            .section { padding: 2rem; margin: 3rem auto; }
+            .section h2 { font-size: 2.5rem; }
+            .timeline { padding-left: 2rem; }
+            .timeline::before { left: 1rem; }
+            .timeline-item { padding: 1.5rem; margin-bottom: 3rem; }
+            .timeline-item::before { left: -2rem; }
             .timeline-item img { width: 100%; height: auto; max-width: 300px; }
+            .skills-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .skill-card { padding: 1.5rem; }
+            .skill-card h3 { font-size: 1.5rem; }
+            .skill-card p { font-size: 1rem; }
+            .contact-form { padding: 1rem; }
+            .contact-form input, .contact-form textarea { font-size: 1rem; }
+            .contact-form button { font-size: 1.2rem; }
+            footer p { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -332,7 +345,7 @@
             <div class="timeline-item">
                 <img src="photo/journey1.jpg" alt="Learning">
                 <h3>2020 - Booted Up</h3>
-                <p>Dove into coding headfirstm HTML was a mess, CSS was so hard but I kept grinding. Failure fueled me.</p>
+                <p>Dove into coding headfirstmHTML was a mess, CSS was so hard but I kept grinding. Failure fueled me.</p>
             </div>
             <div class="timeline-item">
                 <img src="photo/journey2.jpg" alt="First Gig">
@@ -403,7 +416,8 @@
                 <h3>Nebula Hub</h3>
                 <p>A social platform with real time chat React and Firebase, 100 users in 3 months.</p>
             </div>
-            
+        </div>
+    </div>
 
     <div class="section" id="contact">
         <h2>Contact Me</h2>
