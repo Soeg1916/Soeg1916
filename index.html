@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soeg 1916 - Code Cosmos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Nova+Square&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            color: #fff;
+            background: url('https://images.unsplash.com/photo-1552083375-1447ce886485') no-repeat center center fixed;
+            background-size: cover;
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 10, 20, 0.9), rgba(50, 0, 80, 0.7));
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 4rem 0;
+            text-align: center;
+            border-bottom: 10px solid #ff00ff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-family: 'Nova Square', sans-serif;
+            font-size: 6rem;
+            color: #ff00ff;
+            text-transform: uppercase;
+            letter-spacing: 12px;
+            animation: flicker 2s infinite alternate;
+            text-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffcc;
+        }
+
+        header p {
+            font-size: 2rem;
+            color: #00ffcc;
+            margin-top: 1rem;
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.98);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 5rem;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Nova Square', sans-serif;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #ff00ff;
+            transform: translateY(-5px) rotate(5deg);
+            text-shadow: 0 0 15px #ff00ff;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00ffcc;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .section {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            box-shadow: 0 0 50px rgba(255, 0, 255, 0.3);
+            transform: perspective(1000px) rotateX(2deg);
+            transition: transform 0.5s ease;
+        }
+
+        .section:hover {
+            transform: perspective(1000px) rotateX(0deg);
+        }
+
+        .section h2 {
+            font-family: 'Nova Square', sans-serif;
+            font-size: 4rem;
+            color: #ff00ff;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px #ff00ff;
+            animation: slideIn 1s ease-out;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 6rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 3rem;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(#ff00ff, #00ffcc);
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 5rem;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            transition: all 0.5s ease;
+            transform: perspective(1000px) rotateY(5deg);
+        }
+
+        .timeline-item:hover {
+            transform: perspective(1000px) rotateY(0deg) scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.7);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3.5rem;
+            top: 2.5rem;
+            width: 20px;
+            height: 20px;
+            background: #ff00ff;
+            border-radius: 50%;
+            border: 3px solid #00ffcc;
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        .timeline-item img {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 4px solid #ff00ff;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .timeline-item h3 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 0.7rem;
+        }
+
+        .timeline-item p {
+            font-size: 1.3rem;
+            color: #ddd;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .skill-card {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 2.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.4s ease;
+            transform: perspective(1000px) rotateX(5deg);
+        }
+
+        .skill-card:hover {
+            transform: perspective(1000px) rotateX(0deg) scale(1.1);
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.7);
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        .skill-card h3 {
+            font-size: 2rem;
+            color: #ff00ff;
+            margin-bottom: 0.7rem;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+
+        .skill-card p {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-form input, .contact-form textarea {
+            padding: 1rem;
+            border: 2px solid #ff00ff;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px #00ffcc;
+            outline: none;
+        }
+
+        .contact-form button {
+            padding: 1rem;
+            background: #ff00ff;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background: #00ffcc;
+            color: #000;
+            box-shadow: 0 0 20px #00ffcc;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 3rem;
+            text-align: center;
+            border-top: 10px solid #ff00ff;
+        }
+
+        footer p {
+            font-size: 1.5rem;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 4rem; }
+            nav ul { flex-direction: column; gap: 2.5rem; }
+            .timeline { padding-left: 4rem; }
+            .timeline::before { left: 2rem; }
+            .timeline-item::before { left: -2.5rem; }
+            .timeline-item img { width: 100%; height: auto; max-width: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Soeg 1916</h1>
+        <p>From Zero to Hero</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#journey">Journey</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#achievements">Achievements</a></li>
+            <li><a href="#project">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="section" id="journey">
+        <h2>My Journey</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <img src="photo/journey1.jpg" alt="Learning">
+                <h3>2020 - Booted Up</h3>
+                <p>Dove into coding headfirstmHTML was a mess, CSS was so hard but I kept grinding. Failure fueled me.</p>
+            </div>
+            <div class="timeline-item">
+                <img src="photo/journey2.jpg" alt="First Gig">
+                <h3>2022 - First Deploy</h3>
+                <p>Landed some projects on GitHub, was my playground, and I turned those code to repo</p>
+            </div>
+            <div class="timeline-item">
+                <img src="photo/journey3.jpg" alt="Break">
+                <h3>2023 - Life gets a lit bit hard</h3>
+                <p>Life threw a supernova had to step back but I kept dreaming in JS. Resilience was my core.</p>
+            </div>
+            <div class="timeline-item">
+                <img src="photo/journey4.jpg" alt="Comeback">
+                <h3>2024 - My Return</h3>
+                <p>Lot of new things but I adapted faster mastered new stacks in weeks.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="skills">
+        <h2>My Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3>Front-End Fusion</h3>
+                <p>React, Vue, Svelte—crafting interfaces that dazzle and respond like lightning.</p>
+            </div>
+            <div class="skill-card">
+                <h3>Back-End Blueprint</h3>
+                <p>Node.js, Python, GraphQL—building servers that hum with power and precision.</p>
+            </div>
+            <div class="skill-card">
+                <h3>DevOps Dominion</h3>
+                <p>AWS, Kubernetes, CI/CD—deploying at warp speed with zero downtime.</p>
+            </div>
+            <div class="skill-card">
+                <h3>Code Alchemy</h3>
+                <p>Turning chaos into clean, scalable solutions—optimization is my superpower.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="achievements">
+        <h2>My Achievements</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <img src="photo/achieve1.jpg" alt="Portfolio">
+                <h3>Stellar Portfolio</h3>
+                <p>Launched a site so slick it scored me freelance gigs within days—pure code magic.</p>
+            </div>
+            <div class="timeline-item">
+                <img src="photo/achieve2.jpg" alt="Team Lead">
+                <h3>Orbit Commander</h3>
+                <p>Led a 10-dev crew to launch a client app—on time, flawless, and epic.</p>
+            </div>
+            <div class="timeline-item">
+                <img src="photo/achieve3.jpg" alt="Hackathon">
+                <h3>Hackathon Overlord</h3>
+                <p>Crushed a 48-hour hackathon—built a web app that won "Code King" title.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="project">
+        <h2>My Projects</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <img src="photo/project1.jpg" alt="Nebula">
+                <h3>Nebula Hub</h3>
+                <p>A social platform with real time chat React and Firebase, 100 users in 3 months.</p>
+            </div>
+            
+
+    <div class="section" id="contact">
+        <h2>Contact Me</h2>
+        <form class="contact-form">
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <textarea placeholder="Your Message" rows="5" required></textarea>
+            <button type="submit">Blast Off</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>Contact: Soeg1916@gmail.com | +251 977218316</p>
+        <p>I’m the dev your team needs let’s build the future!</p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Note: Form won't submit anywhere yet—this is just for show
+        document.querySelector('.contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Message received! (Not really—this is a demo.)');
+        });
+    </script>
+</body>
+</html>
