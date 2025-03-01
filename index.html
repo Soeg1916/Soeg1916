@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soeg 1916 - Code Cosmos</title>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Nova+Square&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -20,6 +21,7 @@
             line-height: 1.8;
             overflow-x: hidden;
             position: relative;
+            transition: background 0.5s, color 0.5s;
         }
 
         body::before {
@@ -31,6 +33,63 @@
             height: 100%;
             background: linear-gradient(135deg, rgba(0, 10, 20, 0.9), rgba(50, 0, 80, 0.7));
             z-index: -1;
+        }
+
+        body.light-mode {
+            color: #000;
+        }
+
+        body.light-mode::before {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 255, 0.7));
+        }
+
+        body.light-mode header,
+        body.light-mode nav,
+        body.light-mode .section,
+        body.light-mode .timeline-item,
+        body.light-mode .skill-card,
+        body.light-mode footer,
+        body.light-mode .chat-widget,
+        body.light-mode .code-demo,
+        body.light-mode .weather-section,
+        body.light-mode .modal-content {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+        }
+
+        body.light-mode h1,
+        body.light-mode h2,
+        body.light-mode h3,
+        body.light-mode nav a,
+        body.light-mode .skill-card h3,
+        body.light-mode .chat-message.bot,
+        body.light-mode .chat-typing.active {
+            color: #ff007a;
+            text-shadow: none;
+        }
+
+        body.light-mode .chat-message {
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        body.light-mode .chat-message.bot {
+            background: rgba(0, 255, 204, 0.1);
+        }
+
+        body.light-mode .visitor-counter,
+        body.light-mode .clock-widget,
+        body.light-mode .weather-display,
+        body.light-mode .code-demo #calc-result {
+            color: #00ffcc;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
         }
 
         header {
@@ -50,6 +109,21 @@
             letter-spacing: 12px;
             animation: flicker 2s infinite alternate;
             text-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffcc;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hologram {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) perspective(1000px) rotateY(0deg);
+            font-size: 8rem;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            animation: hologramSpin 10s linear infinite;
+            pointer-events: none;
+            z-index: 0;
         }
 
         header p {
@@ -84,10 +158,11 @@
             position: relative;
         }
 
-        nav a:hover {
+        nav a:hover, nav a:focus {
             color: #ff00ff;
             transform: translateY(-5px) rotate(5deg);
             text-shadow: 0 0 15px #ff00ff;
+            outline: none;
         }
 
         nav a::after {
@@ -101,7 +176,7 @@
             transition: width 0.3s ease;
         }
 
-        nav a:hover::after {
+        nav a:hover::after, nav a:focus::after {
             width: 100%;
         }
 
@@ -114,6 +189,8 @@
             box-shadow: 0 0 50px rgba(255, 0, 255, 0.3);
             transform: perspective(1000px) rotateX(2deg);
             transition: transform 0.5s ease;
+            position: relative;
+            z-index: 1;
         }
 
         .section:hover {
@@ -155,9 +232,10 @@
             border-radius: 15px;
             transition: all 0.5s ease;
             transform: perspective(1000px) rotateY(5deg);
+            cursor: pointer;
         }
 
-        .timeline-item:hover {
+        .timeline-item:hover, .timeline-item:focus-within {
             transform: perspective(1000px) rotateY(0deg) scale(1.05);
             box-shadow: 0 0 30px rgba(0, 255, 204, 0.7);
         }
@@ -185,7 +263,7 @@
             transition: transform 0.3s ease;
         }
 
-        .timeline-item:hover img {
+        .timeline-item:hover img, .timeline-item:focus-within img {
             transform: scale(1.1);
         }
 
@@ -213,9 +291,10 @@
             text-align: center;
             transition: all 0.4s ease;
             transform: perspective(1000px) rotateX(5deg);
+            position: relative;
         }
 
-        .skill-card:hover {
+        .skill-card:hover, .skill-card:focus-within {
             transform: perspective(1000px) rotateX(0deg) scale(1.1);
             box-shadow: 0 0 25px rgba(255, 0, 255, 0.7);
             background: rgba(255, 0, 255, 0.1);
@@ -231,6 +310,41 @@
         .skill-card p {
             font-size: 1.2rem;
             color: #ccc;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress {
+            height: 100%;
+            background: #00ffcc;
+            transition: width 1s ease-in-out;
+        }
+
+        .skill-card::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .skill-card:hover::after, .skill-card:focus-within::after {
+            opacity: 1;
         }
 
         .contact-form {
@@ -268,10 +382,368 @@
             transition: all 0.3s ease;
         }
 
-        .contact-form button:hover {
+        .contact-form button:hover, .contact-form button:focus {
             background: #00ffcc;
             color: #000;
             box-shadow: 0 0 20px #00ffcc;
+            outline: none;
+        }
+
+        .chat-widget {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            z-index: 1500;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chat-header {
+            background: #ff00ff;
+            padding: 0.8rem;
+            text-align: center;
+            font-size: 1rem;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .chat-body {
+            max-height: 0;
+            overflow-y: auto;
+            transition: max-height 0.3s ease;
+        }
+
+        .chat-widget.open .chat-body {
+            max-height: 400px;
+            padding: 1rem;
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .chat-message {
+            background: rgba(255, 0, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .chat-message.bot {
+            background: rgba(0, 255, 204, 0.2);
+            align-self: flex-end;
+        }
+
+        .chat-typing {
+            font-size: 0.9rem;
+            color: #00ffcc;
+            padding: 0.5rem;
+            display: none;
+        }
+
+        .chat-typing.active {
+            display: block;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 2px solid #00ffcc;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+        }
+
+        .chat-input button {
+            padding: 0.5rem 1rem;
+            background: #00ffcc;
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .chat-input button:hover, .chat-input button:focus {
+            background: #ff00ff;
+            color: #fff;
+            outline: none;
+        }
+
+        .clock-widget {
+            position: fixed;
+            top: 140px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+        }
+
+        .visitor-counter {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+        }
+
+        .code-demo {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .code-demo pre {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 10px;
+            color: #00ffcc;
+            text-align: left;
+            font-size: 1.1rem;
+            overflow-x: auto;
+        }
+
+        .code-demo input {
+            padding: 0.5rem;
+            margin: 0.5rem;
+            border: 2px solid #ff00ff;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+        }
+
+        .code-demo button {
+            padding: 0.5rem 1rem;
+            background: #ff00ff;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .code-demo button:hover, .code-demo button:focus {
+            background: #00ffcc;
+            color: #000;
+            outline: none;
+        }
+
+        .code-demo #calc-result {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            color: #00ffcc;
+        }
+
+        .weather-section {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .weather-section input {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ff00ff;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            width: 200px;
+        }
+
+        .weather-section button {
+            padding: 0.5rem 1rem;
+            background: #ff00ff;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .weather-section button:hover, .weather-section button:focus {
+            background: #00ffcc;
+            color: #000;
+            outline: none;
+        }
+
+        .weather-display {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            color: #00ffcc;
+        }
+
+        .weather-display img {
+            width: 50px;
+            vertical-align: middle;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.8);
+            animation: modalPop 0.3s ease forwards;
+        }
+
+        .modal-content img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content h3 {
+            font-size: 2.5rem;
+            color: #ff00ff;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            font-size: 1.3rem;
+            color: #ddd;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover, .modal-close:focus {
+            color: #ff00ff;
+            outline: none;
+        }
+
+        .social-links {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .social-links a {
+            color: #fff;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover, .social-links a:focus {
+            color: #ff00ff;
+            transform: scale(1.2);
+            text-shadow: 0 0 15px #ff00ff;
+            outline: none;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ff00ff;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #back-to-top.visible {
+            opacity: 1;
+        }
+
+        #back-to-top:hover, #back-to-top:focus {
+            background: #00ffcc;
+            color: #000;
+            transform: scale(1.1);
+            outline: none;
+        }
+
+        .mode-toggle {
+            position: fixed;
+            bottom: 80px; /* Moved down, above back-to-top */
+            right: 20px;
+            background: #ff00ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .mode-toggle:hover, .mode-toggle:focus {
+            background: #00ffcc;
+            color: #000;
+            outline: none;
+        }
+
+        .audio-toggle {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: #ff00ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .audio-toggle:hover, .audio-toggle:focus {
+            background: #00ffcc;
+            color: #000;
+            outline: none;
         }
 
         footer {
@@ -300,6 +772,15 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
+        @keyframes modalPop {
+            to { transform: scale(1); }
+        }
+
+        @keyframes hologramSpin {
+            0% { transform: translate(-50%, -50%) perspective(1000px) rotateY(0deg); }
+            100% { transform: translate(-50%, -50%) perspective(1000px) rotateY(360deg); }
+        }
+
         @media (max-width: 768px) {
             header h1 { font-size: 3rem; letter-spacing: 6px; }
             header p { font-size: 1.5rem; }
@@ -320,136 +801,453 @@
             .contact-form input, .contact-form textarea { font-size: 1rem; }
             .contact-form button { font-size: 1.2rem; }
             footer p { font-size: 1.2rem; }
+            .chat-widget { width: 250px; }
+            .chat-widget.open .chat-body { max-height: 300px; }
+            .visitor-counter, .clock-widget { font-size: 0.9rem; padding: 0.3rem 0.8rem; }
+            .weather-section input { width: 150px; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Soeg 1916</h1>
-        <p>From Zero to Hero</p>
+    <div id="particles-js"></div>
+
+    <header role="banner">
+        <h1 id="typed-name"></h1>
+        <span class="hologram">Soeg 1916</span>
+        <p id="typed-tagline"></p>
     </header>
 
-    <nav>
+    <nav role="navigation" aria-label="Main navigation">
         <ul>
-            <li><a href="#journey">Journey</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#achievements">Achievements</a></li>
-            <li><a href="#project">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#journey" tabindex="0">Journey</a></li>
+            <li><a href="#skills" tabindex="0">Skills</a></li>
+            <li><a href="#achievements" tabindex="0">Achievements</a></li>
+            <li><a href="#project" tabindex="0">Projects</a></li>
+            <li><a href="#contact" tabindex="0">Contact</a></li>
         </ul>
     </nav>
 
-    <div class="section" id="journey">
+    <button class="audio-toggle" aria-label="Toggle audio" tabindex="0">Audio On</button>
+    <div class="visitor-counter">Visitors: <span id="visitor-count">1</span></div>
+    <div class="clock-widget" id="clock-widget">Loading time...</div>
+    <button class="mode-toggle" aria-label="Toggle light/dark mode" tabindex="0">Light Mode</button>
+
+    <div class="section" id="journey" role="region" aria-label="My Journey">
         <h2>My Journey</h2>
         <div class="timeline">
-            <div class="timeline-item">
-                <img src="photo/journey1.jpg" alt="Learning">
+            <div class="timeline-item" tabindex="0">
+                <img src="photo/journey1.jpg" alt="Person learning to code on a laptop">
                 <h3>2020 - Booted Up</h3>
-                <p>Dove into coding head firstmHTML was a mess, CSS was so hard but I kept grinding. Failure fueled me.</p>
+                <p>Dove into coding head first—HTML was a mess, CSS was brutal, but I kept grinding. Failure fueled me.</p>
             </div>
-            <div class="timeline-item">
-                <img src="photo/journey2.jpg" alt="First Gig">
+            <div class="timeline-item" tabindex="0">
+                <img src="photo/journey2.jpg" alt="Developer working on first GitHub project">
                 <h3>2022 - First Deploy</h3>
-                <p>Landed some projects on GitHub, was my playground, and I turned those code to repo</p>
+                <p>Landed projects on GitHub—my playground—turned raw code into solid repos.</p>
             </div>
-            <div class="timeline-item">
-                <img src="photo/journey3.jpg" alt="Break">
-                <h3>2023 - Life gets a lit bit hard</h3>
-                <p>Life threw a supernova had to step back but I kept dreaming in JS. Resilience was my core.</p>
+            <div class="timeline-item" tabindex="0">
+                <img src="photo/journey3.jpg" alt="Person taking a break from coding">
+                <h3>2023 - Life Hits Hard</h3>
+                <p>Life threw a supernova—stepped back but kept dreaming in JS. Resilience was key.</p>
             </div>
-            <div class="timeline-item">
-                <img src="photo/journey4.jpg" alt="Comeback">
+            <div class="timeline-item" tabindex="0">
+                <img src="photo/journey4.jpg" alt="Developer returning to coding with new tech">
                 <h3>2024 - My Return</h3>
-                <p>Lot of new things but I adapted faster mastered new stacks in weeks.</p>
+                <p>New stacks dropped—I adapted fast, mastered them in weeks.</p>
             </div>
         </div>
     </div>
 
-    <div class="section" id="skills">
+    <div class="section" id="skills" role="region" aria-label="My Skills">
         <h2>My Skills</h2>
         <div class="skills-grid">
-            <div class="skill-card">
+            <div class="skill-card" tabindex="0" data-tooltip="Built 10+ React projects">
                 <h3>Front-End Fusion</h3>
                 <p>React, Vue, Svelte—crafting interfaces that dazzle and respond like lightning.</p>
+                <div class="progress-bar"><div class="progress" style="width: 90%;"></div></div>
             </div>
-            <div class="skill-card">
+            <div class="skill-card" tabindex="0" data-tooltip="Expert in RESTful APIs">
                 <h3>Back-End Blueprint</h3>
-                <p>Node.js, Python, GraphQL—building servers that hum with power and precision.</p>
+                <p>Node.js, Python, GraphQL—servers humming with power and precision.</p>
+                <div class="progress-bar"><div class="progress" style="width: 85%;"></div></div>
             </div>
-            <div class="skill-card">
+            <div class="skill-card" tabindex="0" data-tooltip="Deployed 5+ AWS apps">
                 <h3>DevOps Dominion</h3>
-                <p>AWS, Kubernetes, CI/CD—deploying at warp speed with zero downtime.</p>
+                <p>AWS, Kubernetes, CI/CD—deploying at warp speed, zero downtime.</p>
+                <div class="progress-bar"><div class="progress" style="width: 80%;"></div></div>
             </div>
-            <div class="skill-card">
+            <div class="skill-card" tabindex="0" data-tooltip="Optimized 20+ codebases">
                 <h3>Code Alchemy</h3>
-                <p>Turning chaos into clean, scalable solutions—optimization is my superpower.</p>
+                <p>Turning chaos into clean, scalable solutions—optimization’s my game.</p>
+                <div class="progress-bar"><div class="progress" style="width: 95%;"></div></div>
             </div>
         </div>
     </div>
 
-    <div class="section" id="achievements">
+    <div class="section" id="achievements" role="region" aria-label="My Achievements">
         <h2>My Achievements</h2>
         <div class="timeline">
-            <div class="timeline-item">
-                <img src="photo/achieve1.jpg" alt="Portfolio">
+            <div class="timeline-item" tabindex="0">
+                <img src="photo/achieve1.jpg" alt="Telegram bot generating portfolio links">
                 <h3>Stellar Portfolio</h3>
-                <p>Built a Telegram bot that generates personalized portfolio links for developers.</p>
+                <p>Built a Telegram bot whipping up portfolio links for devs—pure fire.</p>
             </div>
-            <div class="timeline-item">
-                <img src="photo/achieve2.jpg" alt="Team Lead">
+            <div class="timeline-item" tabindex="0">
+                <img src="photo/achieve2.jpg" alt="Team creating a Telegram bot for bookstore">
                 <h3>Orbit Commander</h3>
-                <p>Led a team to create a Telegram bot for a local bookstore. The bot helped customers check book availability, place orders, and get updates on new arrivals.</p>
+                <p>Led a squad to drop a Telegram bot for a bookstore—stock checks, orders, updates, all smooth.</p>
             </div>
-            <div class="timeline-item">
-                <img src="photo/achieve3.jpg" alt="Hackathon">
+            <div class="timeline-item" tabindex="0">
+                <img src="photo/achieve3.jpg" alt="Hackathon winning Telegram bot for students">
                 <h3>Hackathon Overlord</h3>
-                <p>Won a hackathon by building a Telegram bot that matches students with study partners based on their courses. The bot handled scheduling, reminders, and even shared study resources. </p>
+                <p>Snagged a hackathon W with a Telegram bot linking students to study crews—scheduling and resources on lock.</p>
             </div>
         </div>
     </div>
 
-    <div class="section" id="project">
+    <div class="section" id="project" role="region" aria-label="My Projects">
         <h2>My Projects</h2>
         <div class="timeline">
-            <div class="timeline-item">
-                <img src="photo/project1.jpg" alt="Nebula">
+            <div class="timeline-item project-card" data-modal="modal1" tabindex="0">
+                <img src="photo/project1.jpg" alt="Nebula Hub: Social platform with real-time chat">
                 <h3>Nebula Hub</h3>
-                <p>A social platform with real time chat React and Firebase, 100 users in 3 months.</p>
+                <p>Social platform with real-time chat—React and Firebase, 100 users in 3 months.</p>
             </div>
+        </div>
+        <div class="code-demo">
+            <h3>Live Code Demo: Calculator</h3>
+            <pre><code>function calculate() {
+    let num1 = parseFloat(document.getElementById('num1').value);
+    let num2 = parseFloat(document.getElementById('num2').value);
+    let result = num1 + num2;
+    document.getElementById('calc-result').textContent = `Result: ${result}`;
+}</code></pre>
+            <input type="number" id="num1" placeholder="Number 1" aria-label="First number">
+            <input type="number" id="num2" placeholder="Number 2" aria-label="Second number">
+            <button onclick="calculate()" aria-label="Calculate">Calculate</button>
+            <div id="calc-result">Result: </div>
+        </div>
+        <div class="weather-section">
+            <h3>Weather Check</h3>
+            <input type="text" id="weather-city" placeholder="Enter city (e.g., Addis Ababa)" aria-label="City name for weather">
+            <button onclick="getWeather()" aria-label="Get weather">Get Weather</button>
+            <div class="weather-display" id="weather-display">Enter a city to see the weather!</div>
         </div>
     </div>
 
-    <div class="section" id="contact">
+    <div class="section" id="contact" role="region" aria-label="Contact Me">
         <h2>Contact Me</h2>
-        <form class="contact-form">
-            <input type="text" placeholder="Your Name" required>
-            <input type="email" placeholder="Your Email" required>
-            <textarea placeholder="Your Message" rows="5" required></textarea>
-            <button type="submit">Blast Off</button>
+        <form class="contact-form" aria-label="Contact form">
+            <input type="text" placeholder="Your Name" required aria-label="Your Name">
+            <input type="email" placeholder="Your Email" required aria-label="Your Email">
+            <textarea placeholder="Your Message" rows="5" required aria-label="Your Message"></textarea>
+            <button type="submit" aria-label="Send Message">Blast Off</button>
         </form>
     </div>
 
-    <footer>
+    <footer role="contentinfo">
         <p>Contact: Soeg1916@gmail.com | +251 977218316</p>
-        <p>I’m the dev your team needs let’s build the future!</p>
+        <p>I’m the dev your team needs—let’s build the future!</p>
+        <div class="social-links">
+            <a href="https://github.com/Soeg1916" target="_blank" aria-label="GitHub Profile" tabindex="0"><i class="fab fa-github"></i></a>
+            <a href="https://linkedin.com/in/soeg1916" target="_blank" aria-label="LinkedIn Profile" tabindex="0"><i class="fab fa-linkedin"></i></a>
+            <a href="https://twitter.com/Soeg1916" target="_blank" aria-label="Twitter Profile" tabindex="0"><i class="fab fa-twitter"></i></a>
+        </div>
     </footer>
 
+    <button id="back-to-top" aria-label="Back to Top"><i class="fas fa-arrow-up"></i></button>
+
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" tabindex="0" aria-label="Close modal">×</span>
+            <img src="photo/project1.jpg" alt="Nebula Hub: Social platform with real-time chat">
+            <h3>Nebula Hub</h3>
+            <p>A social platform with real-time chat built using React and Firebase. Launched with 100 users in 3 months, featuring live messaging, user profiles, and a cosmic UI. Deployed on AWS with a custom CI/CD pipeline—my proudest creation yet!</p>
+        </div>
+    </div>
+
+    <div class="chat-widget" role="complementary" aria-label="Message Me">
+        <div class="chat-header" tabindex="0">📩</div>
+        <div class="chat-body">
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-typing" id="chat-typing">SoegBot is typing...</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chat-input" placeholder="Type a message..." aria-label="Chat message input">
+                <button id="chat-send" aria-label="Send chat message">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="background-audio" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    </audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
     <script>
+        // Firebase Config (Replace with your own)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 100, density: { enable: true, value_area: 800 } },
+                color: { value: ['#ff00ff', '#00ffcc'] },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: '#ff00ff', opacity: 0.4, width: 1 },
+                move: { enable: true, speed: 2, direction: 'none', random: true }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+                modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
+            },
+            retina_detect: true
+        });
+
+        // Typing Animation
+        const typeText = (element, text, speed, callback) => {
+            let i = 0;
+            element.textContent = '';
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (callback) callback();
+            }
+            type();
+        };
+        typeText(document.getElementById('typed-name'), 'Soeg 1916', 100, () =>
+            typeText(document.getElementById('typed-tagline'), 'From Zero to Hero', 80)
+        );
+
+        // Navigation
         document.querySelectorAll('nav a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', e => {
                 e.preventDefault();
-                const targetId = this.getAttribute('href');
-                document.querySelector(targetId).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+            anchor.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                }
             });
         });
 
-        // Note: Form won't submit anywhere yet—this is just for show
-        document.querySelector('.contact-form').addEventListener('submit', (e) => {
+        // Form Demo
+        document.querySelector('.contact-form').addEventListener('submit', e => {
             e.preventDefault();
-            alert('Message received! (Not really—this is a demo.)');
+            alert('Message received! (Demo mode—no real send.)');
         });
+
+        // Back to Top
+        const backToTop = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('visible', window.scrollY > 300);
+        });
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        backToTop.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        // Mode Toggle
+        const modeToggle = document.querySelector('.mode-toggle');
+        modeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            modeToggle.textContent = document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode';
+            console.log('Light mode toggled:', document.body.classList.contains('light-mode'));
+        });
+        modeToggle.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                document.body.classList.toggle('light-mode');
+                modeToggle.textContent = document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode';
+                console.log('Light mode toggled (key):', document.body.classList.contains('light-mode'));
+            }
+        });
+
+        // Audio Toggle
+        const audio = document.getElementById('background-audio');
+        const audioToggle = document.querySelector('.audio-toggle');
+        audioToggle.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                audioToggle.textContent = 'Audio Off';
+            } else {
+                audio.pause();
+                audioToggle.textContent = 'Audio On';
+            }
+        });
+        audioToggle.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (audio.paused) {
+                    audio.play();
+                    audioToggle.textContent = 'Audio Off';
+                } else {
+                    audio.pause();
+                    audioToggle.textContent = 'Audio On';
+                }
+            }
+        });
+
+        // Modal
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.getElementById(card.getAttribute('data-modal')).style.display = 'flex';
+            });
+            card.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    document.getElementById(card.getAttribute('data-modal')).style.display = 'flex';
+                }
+            });
+        });
+
+        document.querySelectorAll('.modal-close').forEach(close => {
+            close.addEventListener('click', () => {
+                close.parentElement.parentElement.style.display = 'none';
+            });
+            close.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    close.parentElement.parentElement.style.display = 'none';
+                }
+            });
+        });
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', e => {
+                if (e.target === modal) modal.style.display = 'none';
+            });
+        });
+
+        // Chat Widget
+        const chatWidget = document.querySelector('.chat-widget');
+        const chatHeader = document.querySelector('.chat-header');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatTyping = document.getElementById('chat-typing');
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+
+        chatHeader.addEventListener('click', () => {
+            chatWidget.classList.toggle('open');
+            if (chatWidget.classList.contains('open')) chatInput.focus();
+        });
+        chatHeader.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                chatWidget.classList.toggle('open');
+                if (chatWidget.classList.contains('open')) chatInput.focus();
+            }
+        });
+
+        database.ref('messages').on('child_added', snapshot => {
+            const message = snapshot.val();
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-message' + (message.user === 'SoegBot' ? ' bot' : '');
+            msgDiv.textContent = `${message.user}: ${message.text}`;
+            chatMessages.insertBefore(msgDiv, chatTyping);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            if (message.user === 'Visitor') chatTyping.classList.remove('active');
+        });
+
+        chatSend.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if (message) {
+                database.ref('messages').push({
+                    user: 'Visitor',
+                    text: message,
+                    timestamp: Date.now()
+                }).then(() => {
+                    chatTyping.classList.add('active');
+                    setTimeout(() => {
+                        database.ref('messages').push({
+                            user: 'SoegBot',
+                            text: "Yo! Thanks for the message. I’m deep in code right now, but I’ll hit you back soon—stay tuned!",
+                            timestamp: Date.now()
+                        });
+                    }, 2000);
+                });
+                chatInput.value = '';
+            }
+        });
+
+        chatInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') chatSend.click();
+        });
+
+        // Visitor Counter
+        const visitorCount = document.getElementById('visitor-count');
+        let count = 1;
+        setInterval(() => {
+            count += Math.floor(Math.random() * 3) - 1;
+            if (count < 1) count = 1;
+            visitorCount.textContent = count;
+        }, 5000);
+
+        // Weather Function
+        function getWeather() {
+            const city = document.getElementById('weather-city').value.trim() || 'Addis Ababa';
+            const apiKey = 'e4d4c293325f558b59f02b38d2205a4f'; // Replace with your actual key
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.cod === 200) {
+                        document.getElementById('weather-display').innerHTML = `
+                            <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png" alt="${data.weather[0].description}">
+                            ${data.main.temp}°C, ${data.weather[0].description} in ${data.name}
+                        `;
+                    } else {
+                        document.getElementById('weather-display').textContent = 'City not found!';
+                    }
+                })
+                .catch(error => {
+                    console.error('Weather Fetch Error:', error);
+                    document.getElementById('weather-display').textContent = 'Weather unavailable!';
+                });
+        }
+        getWeather();
+
+        // Live Clock
+        function updateClock() {
+            const now = new Date();
+            const offset = 3; // UTC+3 for Addis Ababa
+            const localTime = new Date(now.getTime() + offset * 60 * 60 * 1000);
+            const timeString = localTime.toLocaleTimeString('en-US', { timeZone: 'UTC' });
+            document.getElementById('clock-widget').textContent = `Time: ${timeString} (UTC+3)`;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Calculator Function
+        function calculate() {
+            const num1 = parseFloat(document.getElementById('num1').value) || 0;
+            const num2 = parseFloat(document.getElementById('num2').value) || 0;
+            document.getElementById('calc-result').textContent = `Result: ${num1 + num2}`;
+        }
     </script>
 </body>
 </html>
